@@ -29,7 +29,7 @@ class Romanizator(object):
     def welcome(self):
         print('Welcome to the Hangul->Latin Script Converter {version}\n'.format(version=self.VERSION))
 
-    def get_input(self, welcome=False):
+    def get_input(self):
         """Get the text to convert"""
         print('Please insert the korean text and press CTRL + D:\n')
 
