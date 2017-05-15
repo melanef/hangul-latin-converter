@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# Terminology: 
+# Terminology:
 
 # 자음 or jaeum:    consonant
 # 모음 or moeum:    vowel
-# 밭침 or batchim:  final letter 
+# 밭침 or batchim:  final letter
 # 음절 or eumjeol:  block or syllable
 
 # Hangul sorting order
@@ -22,16 +22,15 @@ class Romanizator(object):
     def __init__(self):
         self.VERSION = 1.0
         self.output = ''
-        self.input = self.get_input(True)
+        self.welcome()
+        self.input = self.get_input()
         self.hangul = s.deserialize('data', 'hangul')
 
+    def welcome(self):
+        print('Welcome to the Hangul->Latin Script Converter {version}\n'.format(version=self.VERSION))
+
     def get_input(self, welcome=False):
-        """Get the text to convert
-
-        :param welcome: boolean; to print the welcome message"""
-        if welcome:
-            print('Welcome to the Hangul->Latin Script Converter {version}\n'.format(version=self.VERSION))
-
+        """Get the text to convert"""
         print('Please insert the korean text and press CTRL + D:\n')
 
         return sys.stdin.read().split('\n')
@@ -62,7 +61,7 @@ class Romanizator(object):
         """True if param is double batchim
 
         :param batchim: char; the final letter of a syllable"""
-        return batchim in ['ㄳ', 'ㄵ', 'ㄶ', 'ㄺ', 'ㄻ', 'ㄼ', 'ㄽ', 'ㄾ', 'ㄿ', 'ㅀ', 'ㅄ'] 
+        return batchim in ['ㄳ', 'ㄵ', 'ㄶ', 'ㄺ', 'ㄻ', 'ㄼ', 'ㄽ', 'ㄾ', 'ㄿ', 'ㅀ', 'ㅄ']
 
     def split_double_batchim(self, batchim):
         """Split the double in a tuple
@@ -129,20 +128,20 @@ class Romanizator(object):
         if current == '':
             return ''
 
-        # ㅇ comes first because it's a special case 
+        # ㅇ comes first because it's a special case
         if next != '':
             if next == 'ㅇ':
                 if current == 'ㅇ':
                     pass
                 elif current in self.hangul['jaeum'].keys():
-                    return self.jaeum(current)            
+                    return self.jaeum(current)
             elif self.is_double_batchim(current):
                 return self.batchim(self.split_double_batchim(current)[0])
 
             elif next in ('ㄴ', 'ㅁ'):
                 if current == 'ㅂ':
                     return self.jaeum('ㅁ')
-        
+
             elif next in ('ㄱ', 'ㄷ', 'ㅂ'):
                 if current == 'ㅎ':
                     return ''
@@ -157,7 +156,7 @@ class Romanizator(object):
                     return self.jaeum('ㅌ')
                 if current == 'ㅂ':
                     return self.jaeum('ㅍ')
-                   
+
         return self.hangul['batchim'].get(current)
 
     def romanize(self):
@@ -185,7 +184,7 @@ class Romanizator(object):
             if sentence_latin and not sentence_latin[0].isupper() \
             and sentence_latin[0].isalpha():
                     sentence_latin = sentence_latin.capitalize()
-            
+
             output_romanized.append(sentence_latin)
 
         self.output = output_romanized
